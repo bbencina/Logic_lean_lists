@@ -37,7 +37,13 @@ fold nil (cons ∘ f)
 def length {A : Type} : list A → ℕ :=
 fold 0 (λ _ n, n + 1)
 
-def sum_list_ℕ : list ℕ → ℕ := sorry
+/- Exercise 1: -/
+def sum_list_ℕ : list ℕ → ℕ :=
+fold 0 (+)
+
+/- Tests for sum_list_ℕ: -/
+#reduce sum_list_ℕ nil
+#reduce sum_list_ℕ (cons 1 (cons 2 (cons 3 nil)))
 
 def concat {A : Type} : list A → list A → list A :=
 fold id (λ a f l, cons a (f l))
