@@ -1,0 +1,8 @@
+[package]
+name = "Logic_lean_lists"
+version = "0.1"
+lean_version = "leanprover-community/lean:3.14.0"
+path = "src"
+
+[dependencies]
+mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "2ef444afbbdcae10682b2d46479c3f267caca0b6"}
