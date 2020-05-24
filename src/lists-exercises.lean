@@ -193,10 +193,18 @@ theorem length_flatten {A : Type} :
     ... = (length hd) + (sum_list_ℕ (map length tl)) : by rw length_flatten
     ... = sum_list_ℕ (map length (cons hd tl)) : rfl
 
-
+/- Exercise 6: -/
 theorem flatten_concat {A : Type} :
     ∀ (x y : list (list A)), flatten (concat x y) = concat (flatten x) (flatten y)
-    := sorry
+| nil _ := rfl
+| (cons hd tl) y :=
+    calc
+    flatten (concat (cons hd tl) y)
+        = flatten (cons hd (concat tl y)) : rfl
+    ... = concat hd (flatten (concat tl y)) : rfl
+    ... = concat hd (concat (flatten tl) (flatten y)) : by rw flatten_concat
+    ... = concat (concat hd (flatten tl)) (flatten y) : by rw assoc_concat
+    ... = concat (flatten (cons hd tl)) (flatten y) : rfl
 
 theorem flatten_flatten {A : Type} :
     ∀ (x : list (list (list A))), flatten (flatten x) = flatten (map flatten x)
