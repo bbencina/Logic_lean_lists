@@ -45,8 +45,11 @@ fold 0 (+)
 #reduce sum_list_ℕ nil
 #reduce sum_list_ℕ (cons 1 (cons 2 (cons 3 nil)))
 
+
 def concat {A : Type} : list A → list A → list A :=
 fold id (λ a f l, cons a (f l))
+
+#reduce concat (cons 1 nil) (nil)
 
 /- The idea of the flattening operation is to transform a list of lists into an ordinary list
    by iterated concatenation. For example, we should have
@@ -57,8 +60,10 @@ fold id (λ a f l, cons a (f l))
 
    cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil))))
    -/
-
-def flatten {A : Type} : list (list A) → list A := sorry
+/- Exercise 2: (can it be done just by fold?) -/
+def flatten {A : Type} : list (list A) → list A
+| nil := nil
+| (cons hd tl) := concat hd (flatten tl)
 
 /- We have now finished defining our basic operations on lists. Let us check by some examples 
    that the operations indeed do what they are supposed to do. With your mouse, hover over the
