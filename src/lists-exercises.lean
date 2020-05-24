@@ -206,9 +206,17 @@ theorem flatten_concat {A : Type} :
     ... = concat (concat hd (flatten tl)) (flatten y) : by rw assoc_concat
     ... = concat (flatten (cons hd tl)) (flatten y) : rfl
 
+/- Exercise 7: -/
 theorem flatten_flatten {A : Type} :
     ∀ (x : list (list (list A))), flatten (flatten x) = flatten (map flatten x)
-    := sorry
+| nil := rfl
+| (cons hd tl) :=
+    calc
+    flatten (flatten (cons hd tl))
+        = flatten (concat hd (flatten tl)) : rfl
+    ... = concat (flatten hd) (flatten (flatten tl)) : by rw flatten_concat
+    ... = concat (flatten hd) (flatten (map flatten tl)) : by rw flatten_flatten
+    ... = flatten (map flatten (cons hd tl)) : rfl
 
 /- This concludes our coverage of lists in Lean. -/
 
