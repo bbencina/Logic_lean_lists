@@ -167,10 +167,19 @@ theorem flatten_unit {A : Type} :
     flatten (unit (cons hd tl))
         = (cons hd (flatten (unit tl))) : rfl
     ... = (cons hd tl) : by rw flatten_unit
+    ... = (cons hd tl) : rfl
 
+/- Exercise 4: -/
 theorem flatten_map_unit {A : Type} : 
-    forall (x : list A), flatten (map unit x) = x
-    := sorry
+    ∀  (x : list A), flatten (map unit x) = x
+| nil := rfl
+| (cons hd tl) :=
+    calc
+    flatten (map unit (cons hd tl))
+        = flatten (cons (unit hd) (map unit tl)) : rfl
+    ... = cons hd (flatten (map unit tl)) : rfl
+    ... = cons hd tl : by rw flatten_map_unit
+    ... = (cons hd tl) : rfl
 
 theorem length_flatten {A : Type} :
     ∀ (x : list (list A)), length (flatten x) = sum_list_ℕ (map length x)
