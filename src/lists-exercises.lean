@@ -158,9 +158,15 @@ theorem length_concat {A : Type} :
 
 /- Next, we prove the elemenatary properties of the flatten function. -/
 
+/- Exercise 3: -/
 theorem flatten_unit {A : Type} :
     ∀ (x : list A), flatten (unit x) = x 
-    := sorry
+| nil := rfl
+| (cons hd tl) :=
+    calc
+    flatten (unit (cons hd tl))
+        = (cons hd (flatten (unit tl))) : rfl
+    ... = (cons hd tl) : by rw flatten_unit
 
 theorem flatten_map_unit {A : Type} : 
     forall (x : list A), flatten (map unit x) = x
