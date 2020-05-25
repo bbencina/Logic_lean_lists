@@ -327,15 +327,33 @@ def transpose {A : Type} :
 /- The following two theorems show how transpose interacts with the basic operations on
    matrices. These will help to show that transposition is an involution. -/
 
-theorem transpose_cons_horizontal {A : Type} :
-    ∀ {m n : ℕ} (x : vector A m) (M : Matrix m n A),
-    transpose (cons_horizontal x M) = cons_vertical x (transpose M)
-    := sorry
-
+/- Exercise 9: (moved here because trivial and I want to use it in Ex. 8)-/
 theorem transpose_cons_vertical {A : Type} :
     ∀ {m n : ℕ} (x : vector A n) (M : Matrix m n A),
     transpose (cons_vertical x M) = cons_horizontal x (transpose M)
-    := sorry
+| m 0 _ _ := rfl
+| _ n _ _ := rfl
+
+/- Exercise 8: -/
+theorem transpose_cons_horizontal {A : Type} :
+    ∀ {m n : ℕ} (x : vector A m) (M : Matrix m n A),
+    transpose (cons_horizontal x M) = cons_vertical x (transpose M)
+| 0 0 nil nil := rfl
+| 0 n nil M := rfl
+| (m+1) n (cons a x) (cons v M) :=
+    calc
+    transpose (cons_horizontal (cons a x) (cons v M))
+        = transpose (cons_vertical (cons a v) (cons_horizontal x M)) : rfl
+    ... = cons_horizontal (cons a v) (transpose (cons_horizontal x M)) : by rw transpose_cons_vertical
+    ... = cons_horizontal (cons a v) (cons_vertical x (transpose M)) : by rw transpose_cons_horizontal
+    ... = cons_horizontal (cons a v) (cons x (transpose M)) : rfl
+    ... = cons (cons a (top_row (cons x (transpose M)))) (cons_horizontal v (tail_vertical (cons x (transpose M)))) : rfl
+    ... = cons (cons a (top_row (cons_vertical x (transpose M)))) (cons_horizontal v (tail_vertical (cons_vertical x (transpose M)))) :rfl
+--    ... = cons (cons a (top_row (transpose (cons_horizontal x M)))) (cons_horizontal v (tail_vertical (transpose (cons_horizontal x M)))) : by rw transpose_cons_horizontal
+    ... = cons (cons a x) (cons_horizontal v (transpose M)) : rfl
+    ... = cons (cons a x) (transpose (cons_vertical v M)) : by rw transpose_cons_vertical
+    ... = cons (cons a x) (transpose (cons v M)) : rfl
+    ... = cons_vertical (cons a x) (transpose (cons v M)) : rfl
 
 /- We finally show that transposition is an involution. -/
 
