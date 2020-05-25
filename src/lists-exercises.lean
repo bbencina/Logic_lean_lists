@@ -60,7 +60,7 @@ fold id (λ a f l, cons a (f l))
 
    cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil))))
    -/
-/- Exercise 2: (can it be done just by fold?) -/
+/- Exercise 2: (Can it be done just by fold? Better safe than sorry.) -/
 def flatten {A : Type} : list (list A) → list A
 | nil := nil
 | (cons hd tl) := concat hd (flatten tl)
@@ -348,18 +348,28 @@ theorem transpose_cons_horizontal {A : Type} :
     ... = cons_horizontal (cons a v) (cons_vertical x (transpose M)) : by rw transpose_cons_horizontal
     ... = cons_horizontal (cons a v) (cons x (transpose M)) : rfl
     ... = cons (cons a (top_row (cons x (transpose M)))) (cons_horizontal v (tail_vertical (cons x (transpose M)))) : rfl
-    ... = cons (cons a (top_row (cons_vertical x (transpose M)))) (cons_horizontal v (tail_vertical (cons_vertical x (transpose M)))) :rfl
---    ... = cons (cons a (top_row (transpose (cons_horizontal x M)))) (cons_horizontal v (tail_vertical (transpose (cons_horizontal x M)))) : by rw transpose_cons_horizontal
+    ... = cons (cons a (top_row (cons_vertical x (transpose M)))) (cons_horizontal v (tail_vertical (cons_vertical x (transpose M)))) : rfl
     ... = cons (cons a x) (cons_horizontal v (transpose M)) : rfl
     ... = cons (cons a x) (transpose (cons_vertical v M)) : by rw transpose_cons_vertical
     ... = cons (cons a x) (transpose (cons v M)) : rfl
     ... = cons_vertical (cons a x) (transpose (cons v M)) : rfl
+/- Note: A bunch of these rfl's can be commented out for the proof to still work. Of course I leave them
+         in for legibility's sake, otherwise I'd be lost the next time I try to read this. -/
 
 /- We finally show that transposition is an involution. -/
 
 theorem transpose_transpose {A : Type} :
     ∀ {m n : ℕ} (M : Matrix m n A), transpose (transpose M) = M
-    := sorry
+| 0 0 nil := rfl
+| 0 (n+1) nil := rfl
+| m n (cons v M) :=
+    calc
+    transpose (transpose (cons v M))
+        = transpose (transpose (cons_vertical v M)) : rfl
+    ... = transpose (cons_horizontal v (transpose M)) : by rw transpose_cons_vertical
+    ... = cons_vertical v (transpose (transpose M)) : by rw transpose_cons_horizontal
+    ... = cons_vertical v M : by rw transpose_transpose
+    ... = cons v M : rfl
 
 end vector
 
